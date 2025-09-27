@@ -424,7 +424,7 @@ body {
 /* 3D Cake Styles */
 .cake-container {
     position: fixed;
-    bottom: 17%;
+    bottom: 10%;
     left: 50%;
     transform: translateX(-50%);
     z-index: 18;
