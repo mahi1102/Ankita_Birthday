@@ -484,6 +484,11 @@ const dailyThoughts = [
 
 // Apply daily background theme
 function applyDailyBackground() {
+    // Don't apply daily themes on mobile devices to prevent pink colors
+    if (window.innerWidth <= 768) {
+        return;
+    }
+    
     const today = new Date();
     const dayOfYear = Math.floor((today - new Date(today.getFullYear(), 0, 0)) / (1000 * 60 * 60 * 24));
     const themeIndex = dayOfYear % backgroundThemes.length;
@@ -503,8 +508,115 @@ function applyDailyBackground() {
     console.log(`Applied theme: ${theme.name} (Day ${dayOfYear} of year)`);
 }
 
+// Disable Developer Tools
+function disableDevTools() {
+    // Disable F12 and dev tools shortcuts
+    document.addEventListener('keydown', function(e) {
+        if (e.key === 'F12' || (e.ctrlKey && e.shiftKey && e.key === 'I') || (e.ctrlKey && e.shiftKey && e.key === 'C')) {
+            e.preventDefault();
+            // Show a subtle warning instead of completely blocking
+            console.log('%cDeveloper Tools Access Blocked!', 'color: red; font-size: 16px; font-weight: bold;');
+            return false;
+        }
+    });
+
+    // Disable right-click context menu
+    document.addEventListener('contextmenu', function(e) {
+        e.preventDefault();
+        // Show a subtle warning in console
+        console.log('%cRight-click disabled!', 'color: orange; font-size: 14px;');
+        return false;
+    });
+
+    // Disable common dev tools shortcuts
+    document.addEventListener('keydown', function(e) {
+        // Ctrl+Shift+I (DevTools)
+        if (e.ctrlKey && e.shiftKey && e.key === 'I') {
+            e.preventDefault();
+            return false;
+        }
+        // Ctrl+Shift+C (Element selector)
+        if (e.ctrlKey && e.shiftKey && e.key === 'C') {
+            e.preventDefault();
+            return false;
+        }
+        // Ctrl+U (View source)
+        if (e.ctrlKey && e.key === 'u') {
+            e.preventDefault();
+            return false;
+        }
+        // Ctrl+S (Save page)
+        if (e.ctrlKey && e.key === 's') {
+            e.preventDefault();
+            return false;
+        }
+    });
+
+    // Disable text selection
+    document.addEventListener('selectstart', function(e) {
+        e.preventDefault();
+        return false;
+    });
+
+    // Disable drag
+    document.addEventListener('dragstart', function(e) {
+        e.preventDefault();
+        return false;
+    });
+
+    // Console warning
+    console.clear();
+    console.log('%cSTOP!', 'color: red; font-size: 50px; font-weight: bold;');
+    console.log('%cThis is a browser feature intended for developers. If someone told you to copy-paste something here, it is a scam and will give them access to your account.', 'color: red; font-size: 16px;');
+    
+    // Detect dev tools opening (more accurate detection)
+    let devtools = {open: false, orientation: null};
+    const threshold = 200; // Increased threshold to reduce false positives
+    let detectionCount = 0;
+    const maxDetectionCount = 3; // Require multiple detections before blocking
+    let detectionStarted = false;
+    
+    // Start detection after a delay to prevent false positives on page load
+    setTimeout(function() {
+        detectionStarted = true;
+    }, 3000); // 3 second delay
+    
+    setInterval(function() {
+        if (!detectionStarted) return; // Don't detect until after delay
+        
+        const heightDiff = window.outerHeight - window.innerHeight;
+        const widthDiff = window.outerWidth - window.innerWidth;
+        
+        if (heightDiff > threshold || widthDiff > threshold) {
+            detectionCount++;
+            if (detectionCount >= maxDetectionCount && !devtools.open) {
+                devtools.open = true;
+                console.clear();
+                console.log('%cDeveloper Tools Detected!', 'color: red; font-size: 30px; font-weight: bold;');
+                console.log('%cAccess Denied!', 'color: red; font-size: 20px;');
+                // Show warning but don't break the page completely
+                const warningDiv = document.createElement('div');
+                warningDiv.style.cssText = 'position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.9); color: #fff; font-size: 24px; text-align: center; display: flex; justify-content: center; align-items: center; z-index: 99999;';
+                warningDiv.innerHTML = '<h1>Developer Tools Detected!<br>Please close developer tools to continue.</h1>';
+                document.body.appendChild(warningDiv);
+            }
+        } else {
+            detectionCount = 0;
+            if (devtools.open) {
+                devtools.open = false;
+                // Remove warning if dev tools are closed
+                const warningDiv = document.querySelector('div[style*="position: fixed"]');
+                if (warningDiv) {
+                    warningDiv.remove();
+                }
+            }
+        }
+    }, 1000); // Reduced frequency to 1 second
+}
+
 // Initialize
 document.addEventListener('DOMContentLoaded', function() {
+    disableDevTools();
     applyDailyBackground();
     checkBirthdayAndInitialize();
 });
@@ -626,6 +738,11 @@ function updateAgeDisplay() {
 
 // Start countdown timer
 function startCountdownTimer() {
+    // Clear any existing interval
+    if (countdownInterval) {
+        clearInterval(countdownInterval);
+    }
+    
     updateCountdown();
     countdownInterval = setInterval(updateCountdown, 1000);
 }
@@ -640,11 +757,8 @@ function updateCountdown() {
     const now = new Date();
     const nextBirthday = getNextBirthday();
     
-    // Normalize dates to midnight to avoid timezone issues
-    const nowMidnight = new Date(now.getFullYear(), now.getMonth(), now.getDate());
-    const birthdayMidnight = new Date(nextBirthday.getFullYear(), nextBirthday.getMonth(), nextBirthday.getDate());
-    
-    const timeDiff = birthdayMidnight.getTime() - nowMidnight.getTime();
+    // Calculate exact time difference including hours, minutes, seconds
+    const timeDiff = nextBirthday.getTime() - now.getTime();
     
     if (timeDiff <= 0) {
         // It's birthday! Refresh page
@@ -657,10 +771,16 @@ function updateCountdown() {
     const minutes = Math.floor((timeDiff % (1000 * 60 * 60)) / (1000 * 60));
     const seconds = Math.floor((timeDiff % (1000 * 60)) / 1000);
     
-    document.getElementById('daysCount').textContent = days.toString().padStart(3, '0');
-    document.getElementById('hoursCount').textContent = hours.toString().padStart(2, '0');
-    document.getElementById('minutesCount').textContent = minutes.toString().padStart(2, '0');
-    document.getElementById('secondsCount').textContent = seconds.toString().padStart(2, '0');
+    // Update the countdown display elements
+    const daysElement = document.getElementById('daysCount');
+    const hoursElement = document.getElementById('hoursCount');
+    const minutesElement = document.getElementById('minutesCount');
+    const secondsElement = document.getElementById('secondsCount');
+    
+    if (daysElement) daysElement.textContent = days.toString().padStart(3, '0');
+    if (hoursElement) hoursElement.textContent = hours.toString().padStart(2, '0');
+    if (minutesElement) minutesElement.textContent = minutes.toString().padStart(2, '0');
+    if (secondsElement) secondsElement.textContent = seconds.toString().padStart(2, '0');
 }
 
 // Get next birthday date
@@ -1224,11 +1344,27 @@ function updateCarousel() {
         photoCounter.textContent = `${currentPhotoIndex + 1} / ${photoData.length}`;
         photoTitle.textContent = photoData[currentPhotoIndex].title;
         
-        // Add zoom effect on load
-        carouselImage.style.transform = 'scale(0.8)';
+        // Ensure image loads properly on mobile
+        carouselImage.onload = function() {
+            // Add zoom effect on load
+            carouselImage.style.transform = 'scale(0.8)';
+            setTimeout(() => {
+                carouselImage.style.transform = 'scale(1)';
+            }, 100);
+        };
+        
+        // Force image reload if already cached
+        carouselImage.style.opacity = '0.7';
         setTimeout(() => {
-            carouselImage.style.transform = 'scale(1)';
+            carouselImage.style.opacity = '1';
         }, 100);
+        
+        // Ensure photo info is visible on mobile
+        const photoInfo = document.querySelector('.photo-info');
+        if (photoInfo) {
+            photoInfo.style.display = 'flex';
+            photoInfo.style.opacity = '1';
+        }
     }
     
     updateThumbnailSelection();
@@ -1316,11 +1452,14 @@ function addSwipeSupport() {
     let startY = 0;
     let isSwipe = false;
     
+    if (!carouselContainer) return;
+    
     carouselContainer.addEventListener('touchstart', (e) => {
         startX = e.touches[0].clientX;
         startY = e.touches[0].clientY;
         isSwipe = true;
-    });
+        e.preventDefault(); // Prevent scrolling
+    }, { passive: false });
     
     carouselContainer.addEventListener('touchmove', (e) => {
         if (!isSwipe) return;
@@ -1338,11 +1477,19 @@ function addSwipeSupport() {
                 previousPhoto();
             }
             isSwipe = false;
+            e.preventDefault(); // Prevent scrolling
         }
+    }, { passive: false });
+    
+    carouselContainer.addEventListener('touchend', (e) => {
+        isSwipe = false;
     });
     
-    carouselContainer.addEventListener('touchend', () => {
-        isSwipe = false;
+    // Add click support for mobile
+    carouselContainer.addEventListener('click', (e) => {
+        if (e.target === carouselContainer || e.target.id === 'carouselImage') {
+            nextPhoto();
+        }
     });
 }
 
