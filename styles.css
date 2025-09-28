@@ -225,24 +225,33 @@ body {
     100% { background-position: 0% 50%; }
 }
 
-/* Countdown Styles */
-.countdown {
+/* Birthday Countdown Styles */
+.birthday-countdown {
     position: fixed;
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-    font-size: 10rem;
+    font-size: 12rem;
     font-weight: bold;
     color: #fff;
-    text-shadow: 0 0 30px #ff6b6b;
+    text-shadow: 0 0 30px #ff6b6b, 0 0 60px #ff6b6b;
     z-index: 1000;
-    animation: countdownPulse 1s ease-in-out;
+    animation: birthdayCountdownPulse 1s ease-in-out;
+    display: none; /* Hidden by default, shown only on birthday */
 }
 
-@keyframes countdownPulse {
-    0%, 100% { transform: translate(-50%, -50%) scale(1); }
-    50% { transform: translate(-50%, -50%) scale(1.2); }
+@keyframes birthdayCountdownPulse {
+    0%, 100% { 
+        transform: translate(-50%, -50%) scale(1);
+        opacity: 1;
+    }
+    50% { 
+        transform: translate(-50%, -50%) scale(1.3);
+        opacity: 0.8;
+    }
 }
+
+/* Countdown Styles */
 
 .boom {
     font-size: 12rem;
@@ -900,51 +909,784 @@ body {
     pointer-events: none;
 }
 
-/* Photo Gallery */
+/* Date Display */
+.date-display {
+    position: fixed;
+    top: 20px;
+    left: 20px;
+    z-index: 200;
+    background: rgba(0, 0, 0, 0.8);
+    backdrop-filter: blur(10px);
+    border-radius: 15px;
+    padding: 15px;
+    border: 2px solid rgba(255, 255, 255, 0.1);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+    color: white;
+    text-align: center;
+    min-width: 200px;
+}
+
+.current-date {
+    font-size: 1.2rem;
+    font-weight: bold;
+    margin-bottom: 10px;
+    color: #FFD700;
+    text-shadow: 0 0 10px #FFD700;
+}
+
+.days-until-birthday {
+    font-size: 0.9rem;
+    color: #ff6b6b;
+    font-weight: bold;
+}
+
+/* Daily Thought Display */
+.daily-thought {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 100;
+    background: rgba(0, 0, 0, 0.9);
+    backdrop-filter: blur(15px);
+    border-radius: 20px;
+    padding: 30px;
+    border: 3px solid rgba(255, 215, 0, 0.3);
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+    color: white;
+    text-align: center;
+    max-width: 500px;
+    max-height: 400px;
+    overflow-y: auto;
+    opacity: 0;
+    transition: all 0.5s ease;
+}
+
+.daily-thought.show {
+    opacity: 1;
+}
+
+.thought-content h3 {
+    color: #FFD700;
+    font-size: 1.5rem;
+    margin-bottom: 20px;
+    text-shadow: 0 0 15px #FFD700;
+}
+
+#thoughtText {
+    font-size: 1.1rem;
+    line-height: 1.6;
+    margin-bottom: 20px;
+    color: #fff;
+    text-shadow: 0 0 10px rgba(255, 255, 255, 0.3);
+}
+
+.thought-counter {
+    background: rgba(255, 107, 107, 0.2);
+    padding: 10px;
+    border-radius: 10px;
+    border: 1px solid rgba(255, 107, 107, 0.3);
+}
+
+#dayCounter {
+    color: #ff6b6b;
+    font-weight: bold;
+    font-size: 0.9rem;
+}
+
+/* Main Dashboard Styles */
+.main-dashboard {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 95%;
+    max-width: 850px;
+    max-height: 95vh;
+    overflow-y: auto;
+    z-index: 50;
+    opacity: 0;
+    transition: all 0.5s ease;
+    display: none;
+}
+
+.main-dashboard.show {
+    opacity: 1;
+    display: block;
+}
+
+/* Age Section */
+.age-section {
+    text-align: center;
+    margin-bottom: 15px;
+}
+
+.age-card {
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.05));
+    backdrop-filter: blur(10px);
+    border: 2px solid rgba(255, 255, 255, 0.2);
+    border-radius: 12px;
+    padding: 12px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+}
+
+.age-number {
+    font-size: 3rem;
+    font-weight: bold;
+    color: #FFD700;
+    text-shadow: 0 0 20px #FFD700;
+    margin-bottom: 6px;
+}
+
+.age-label {
+    font-size: 1.3rem;
+    color: #fff;
+    margin-bottom: 8px;
+}
+
+.birth-year {
+    font-size: 1rem;
+    color: #ccc;
+}
+
+/* Countdown Section */
+.countdown-section {
+    text-align: center;
+    margin-bottom: 15px;
+    position: relative;
+    z-index: 10;
+}
+
+.countdown-section h3 {
+    color: #fff;
+    font-size: 1.3rem;
+    margin-bottom: 12px;
+    text-shadow: 0 0 10px #ff6b6b;
+}
+
+.countdown-timer {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 8px;
+    max-width: 500px;
+    margin: 0 auto;
+    position: relative;
+    z-index: 10;
+}
+
+.time-unit {
+    background: linear-gradient(135deg, rgba(255, 107, 107, 0.2), rgba(255, 107, 107, 0.1));
+    backdrop-filter: blur(10px);
+    border: 2px solid rgba(255, 107, 107, 0.3);
+    border-radius: 10px;
+    padding: 12px;
+    text-align: center;
+    position: relative;
+    z-index: 11;
+}
+
+.time-number {
+    display: block;
+    font-size: 1.6rem;
+    font-weight: bold;
+    color: #ff6b6b;
+    text-shadow: 0 0 10px #ff6b6b;
+    margin-bottom: 4px;
+    position: relative;
+    z-index: 12;
+}
+
+.time-label {
+    font-size: 0.8rem;
+    color: #fff;
+}
+
+/* Daily Thought Card */
+.daily-thought-card {
+    background: linear-gradient(135deg, rgba(255, 215, 0, 0.1), rgba(255, 215, 0, 0.05));
+    backdrop-filter: blur(10px);
+    border: 2px solid rgba(255, 215, 0, 0.3);
+    border-radius: 20px;
+    padding: 15px;
+    margin-bottom: 15px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+}
+
+.thought-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+    flex-wrap: wrap;
+}
+
+.thought-header h3 {
+    color: #FFD700;
+    font-size: 1.3rem;
+    margin: 0;
+    text-shadow: 0 0 10px #FFD700;
+}
+
+.day-progress {
+    text-align: right;
+}
+
+.day-progress span {
+    color: #ff6b6b;
+    font-weight: bold;
+    font-size: 0.9rem;
+    display: block;
+    margin-bottom: 5px;
+}
+
+.progress-bar {
+    width: 100px;
+    height: 4px;
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: 2px;
+    overflow: hidden;
+}
+
+.progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, #ff6b6b, #FFD700);
+    border-radius: 2px;
+    transition: width 0.5s ease;
+}
+
+.thought-content p {
+    color: #fff;
+    font-size: 1.1rem;
+    line-height: 1.6;
+    margin-bottom: 20px;
+    text-shadow: 0 0 5px rgba(255, 255, 255, 0.3);
+}
+
+.thought-actions {
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+}
+
+.thought-btn {
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.05));
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    color: #fff;
+    padding: 8px 16px;
+    border-radius: 15px;
+    cursor: pointer;
+    font-size: 0.9rem;
+    transition: all 0.3s ease;
+}
+
+.thought-btn:hover {
+    background: linear-gradient(135deg, rgba(255, 107, 107, 0.3), rgba(255, 107, 107, 0.1));
+    border-color: #ff6b6b;
+    transform: translateY(-2px);
+}
+
+/* Stats Section */
+.stats-section {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 8px;
+}
+
+.stat-card {
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.05));
+    backdrop-filter: blur(10px);
+    border: 2px solid rgba(255, 255, 255, 0.2);
+    border-radius: 10px;
+    padding: 12px;
+    text-align: center;
+    transition: all 0.3s ease;
+}
+
+.stat-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 15px 40px rgba(0, 0, 0, 0.4);
+}
+
+.stat-icon {
+    font-size: 2rem;
+    margin-bottom: 10px;
+}
+
+.stat-value {
+    font-size: 1.6rem;
+    font-weight: bold;
+    color: #ffffff;
+    text-shadow: 0 0 15px rgba(255, 255, 255, 0.8), 0 0 30px rgba(255, 255, 255, 0.4);
+    margin-bottom: 4px;
+}
+
+.stat-label {
+    font-size: 0.8rem;
+    color: #ccc;
+}
+
+.stat-subtitle {
+    font-size: 0.65rem;
+    color: #999;
+    font-weight: 400;
+    margin-top: 1px;
+}
+
+/* Birth Info Section */
+.birth-info-section {
+    margin-top: 15px;
+    display: flex;
+    justify-content: center;
+}
+
+.birth-card {
+    background: linear-gradient(135deg, rgba(255, 215, 0, 0.15), rgba(255, 165, 0, 0.1));
+    backdrop-filter: blur(15px);
+    border: 2px solid rgba(255, 215, 0, 0.3);
+    border-radius: 20px;
+    padding: 12px 20px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    box-shadow: 0 8px 32px rgba(255, 215, 0, 0.1);
+    transition: all 0.3s ease;
+    animation: birthCardGlow 3s ease-in-out infinite;
+}
+
+.birth-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 12px 40px rgba(255, 215, 0, 0.2);
+}
+
+.birth-icon {
+    font-size: 2.2rem;
+    filter: drop-shadow(0 0 10px rgba(255, 215, 0, 0.5));
+}
+
+.birth-text {
+    text-align: left;
+}
+
+.birth-label {
+    font-size: 1.1rem;
+    color: #FFD700;
+    font-weight: bold;
+    text-shadow: 0 0 10px rgba(255, 215, 0, 0.3);
+}
+
+.birth-subtitle {
+    font-size: 0.8rem;
+    color: #fff;
+    margin-top: 1px;
+    opacity: 0.9;
+}
+
+@keyframes birthCardGlow {
+    0%, 100% { 
+        box-shadow: 0 8px 32px rgba(255, 215, 0, 0.1);
+        border-color: rgba(255, 215, 0, 0.3);
+    }
+    50% { 
+        box-shadow: 0 8px 32px rgba(255, 215, 0, 0.2);
+        border-color: rgba(255, 215, 0, 0.5);
+    }
+}
+
+/* Birthday Page Override */
+body.birthday-mode .main-dashboard {
+    display: none !important;
+}
+
+body.birthday-mode .daily-thought {
+    display: none;
+}
+
+body.birthday-mode .photo-gallery {
+    display: none;
+}
+
+body.birthday-mode .countdown-section {
+    display: none;
+}
+
+/* Hide birthday countdown on non-birthday days */
+.birthday-countdown {
+    display: none !important;
+}
+
+/* Show birthday countdown only on birthday */
+body.birthday-mode .birthday-countdown {
+    display: block !important;
+}
+
+body.birthday-mode .date-display .days-until-birthday {
+    color: #FFD700;
+    font-size: 1.1rem;
+    text-shadow: 0 0 15px #FFD700;
+    animation: birthdayGlow 2s ease-in-out infinite;
+}
+
+@keyframes birthdayGlow {
+    0%, 100% { 
+        text-shadow: 0 0 15px #FFD700; 
+    }
+    50% { 
+        text-shadow: 0 0 25px #FFD700, 0 0 35px #ff6b6b; 
+    }
+}
+
+/* Advanced Photo Gallery */
 .photo-gallery {
     position: fixed;
     top: 20px;
     right: 20px;
     z-index: 150;
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
+    background: rgba(0, 0, 0, 0.7);
+    backdrop-filter: blur(10px);
+    border-radius: 15px;
+    padding: 20px;
+    border: 2px solid rgba(255, 255, 255, 0.1);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+    width: 305px;
+    min-height: 400px;
+}
+
+.gallery-header {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.gallery-header h3 {
+    color: #fff;
+    font-size: 1.3rem;
+    margin-bottom: 12px;
+    text-shadow: 0 0 10px #ff6b6b;
+}
+
+.gallery-toggle {
+    background: linear-gradient(145deg, #ff6b6b, #ee5a52);
+    color: white;
+    border: none;
+    padding: 8px 15px;
+    border-radius: 20px;
+    cursor: pointer;
+    font-size: 0.9rem;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 15px rgba(255, 107, 107, 0.3);
+}
+
+.gallery-toggle:hover {
+    transform: scale(1.05);
+    box-shadow: 0 6px 20px rgba(255, 107, 107, 0.5);
+}
+
+.photo-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 12px;
 }
 
 .photo-frame {
-    width: 80px;
-    height: 80px;
-    border-radius: 10px;
-    background: linear-gradient(145deg, #fff, #f8f9fa);
-    padding: 5px;
-    box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+    width: 75px;
+    height: 75px;
+    border-radius: 12px;
+    overflow: hidden;
+    position: relative;
     cursor: pointer;
-    transition: transform 0.3s ease;
+    transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
     animation: photoFloat 4s ease-in-out infinite;
 }
 
-.photo-frame:nth-child(2) { animation-delay: 1s; }
-.photo-frame:nth-child(3) { animation-delay: 2s; }
+.photo-frame:nth-child(2) { animation-delay: 0.5s; }
+.photo-frame:nth-child(3) { animation-delay: 1s; }
+.photo-frame:nth-child(4) { animation-delay: 1.5s; }
+.photo-frame:nth-child(5) { animation-delay: 2s; }
+.photo-frame:nth-child(6) { animation-delay: 2.5s; }
 
 @keyframes photoFloat {
-    0%, 100% { transform: translateY(0) rotate(0deg); }
-    50% { transform: translateY(-10px) rotate(2deg); }
+    0%, 100% { transform: translateY(0) rotate(0deg) scale(1); }
+    50% { transform: translateY(-8px) rotate(2deg) scale(1.02); }
 }
 
-.photo-frame:hover {
-    transform: scale(1.2) rotate(5deg);
-}
-
-.photo-content {
+.photo-img {
     width: 100%;
     height: 100%;
-    border-radius: 5px;
-    background: linear-gradient(45deg, #ff6b6b, #4dabf7, #51cf66);
+    object-fit: cover;
+    transition: transform 0.4s ease;
+    filter: brightness(0.8) contrast(1.1);
+}
+
+.photo-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(45deg, rgba(255, 107, 107, 0.3), rgba(77, 171, 247, 0.3));
     display: flex;
     align-items: center;
     justify-content: center;
+    opacity: 0.8;
+    transition: all 0.3s ease;
+}
+
+.photo-emoji {
+    font-size: 1.5rem;
+    text-shadow: 0 0 10px rgba(255, 255, 255, 0.8);
+    animation: emojiPulse 2s ease-in-out infinite;
+}
+
+@keyframes emojiPulse {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.1); }
+}
+
+.photo-frame:hover {
+    transform: scale(1.15) rotate(5deg);
+    z-index: 10;
+    box-shadow: 0 15px 40px rgba(0, 0, 0, 0.4);
+}
+
+.photo-frame:hover .photo-img {
+    transform: scale(1.1);
+    filter: brightness(1) contrast(1.2);
+}
+
+.photo-frame:hover .photo-overlay {
+    opacity: 0.3;
+    background: linear-gradient(45deg, rgba(255, 107, 107, 0.1), rgba(77, 171, 247, 0.1));
+}
+
+/* Photo Modal */
+.photo-modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.95);
+    z-index: 1000;
+    display: none;
+    justify-content: center;
+    align-items: center;
+    backdrop-filter: blur(5px);
+}
+
+.photo-modal-content {
+    background: rgba(0, 0, 0, 0.8);
+    border-radius: 20px;
+    padding: 20px;
+    width: 95%;
+    height: 95%;
+    border: 2px solid rgba(255, 255, 255, 0.1);
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+    animation: modalSlideIn 0.5s ease-out;
+    display: flex;
+    flex-direction: column;
+}
+
+.photo-content-area {
+    display: flex;
+    gap: 20px;
+    flex: 1;
+    overflow: hidden;
+}
+
+.photo-modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 15px;
+    padding-bottom: 15px;
+    border-bottom: 2px solid rgba(255, 255, 255, 0.1);
+    flex-shrink: 0;
+}
+
+.photo-modal-header h2 {
+    color: #fff;
+    font-size: 1.8rem;
+    text-shadow: 0 0 15px #ff6b6b;
+    margin: 0;
+}
+
+.close-gallery {
+    background: none;
+    border: none;
+    color: #fff;
     font-size: 2rem;
-    color: white;
+    cursor: pointer;
+    padding: 5px 10px;
+    border-radius: 50%;
+    transition: all 0.3s ease;
+}
+
+.close-gallery:hover {
+    background: rgba(255, 107, 107, 0.3);
+    transform: scale(1.1);
+}
+
+/* Photo Carousel */
+.photo-main-content {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.photo-carousel {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 30px;
+    flex: 1;
+}
+
+.carousel-btn {
+    background: rgba(255, 255, 255, 0.1);
+    border: 2px solid rgba(255, 255, 255, 0.3);
+    color: #fff;
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    cursor: pointer;
+    font-size: 1.8rem;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.carousel-btn:hover {
+    background: rgba(255, 107, 107, 0.3);
+    border-color: #ff6b6b;
+    transform: scale(1.1);
+}
+
+.carousel-container {
+    position: relative;
+    max-width: 1000px;
+    max-height: 80vh;
+    width: auto;
+    height: auto;
+    overflow: visible;
+    border-radius: 15px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+#carouselImage {
+    max-width: 100%;
+    max-height: 80vh;
+    width: auto;
+    height: auto;
+    object-fit: contain;
+    transition: transform 0.3s ease;
+    cursor: zoom-in;
+    border-radius: 15px;
+}
+
+#carouselImage:hover {
+    transform: scale(1.05);
+}
+
+.photo-info {
+    position: absolute;
+    bottom: -50px;
+    left: 0;
+    right: 0;
+    background: rgba(0, 0, 0, 0.8);
+    color: #fff;
+    padding: 15px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-radius: 10px;
+    margin-top: 10px;
+}
+
+#photoCounter {
+    font-weight: bold;
+    text-shadow: 0 0 10px #ff6b6b;
+}
+
+#photoTitle {
+    font-style: italic;
+}
+
+/* Photo Thumbnails */
+.photo-sidebar {
+    width: 160px;
+    display: flex;
+    flex-direction: column;
+}
+
+.photo-thumbnails {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    max-height: 75vh;
+    overflow-y: scroll;
+    padding: 15px;
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 10px;
+    scrollbar-width: auto;
+    scrollbar-color: #ff6b6b rgba(255, 255, 255, 0.2);
+}
+
+/* Webkit scrollbar styling */
+.photo-thumbnails::-webkit-scrollbar {
+    width: 12px;
+}
+
+.photo-thumbnails::-webkit-scrollbar-track {
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: 6px;
+}
+
+.photo-thumbnails::-webkit-scrollbar-thumb {
+    background: linear-gradient(45deg, #ff6b6b, #ff8e8e);
+    border-radius: 6px;
+    border: 2px solid rgba(255, 255, 255, 0.1);
+}
+
+.photo-thumbnails::-webkit-scrollbar-thumb:hover {
+    background: linear-gradient(45deg, #ff5252, #ff6b6b);
+    border: 2px solid rgba(255, 255, 255, 0.3);
+}
+
+.thumbnail {
+    width: 140px;
+    height: 120px;
+    border-radius: 10px;
+    overflow: hidden;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    border: 2px solid transparent;
+    opacity: 0.7;
+    object-fit: cover;
+    flex-shrink: 0;
+}
+
+.thumbnail:hover {
+    transform: scale(1.1);
+    opacity: 1;
+    border-color: #ff6b6b;
+}
+
+.thumbnail.active {
+    border-color: #ff6b6b;
+    opacity: 1;
+    transform: scale(1.1);
+}
+
+.thumbnail img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
 }
 
 /* Dynamic Lighting */
@@ -997,27 +1739,182 @@ body {
 
 /* Mobile Responsive Styles */
 @media (max-width: 768px) {
+    /* Date Display Mobile */
+    .date-display {
+        top: 10px;
+        left: 10px;
+        right: 10px;
+        min-width: auto;
+        padding: 10px;
+        border-radius: 10px;
+        font-size: 0.9rem;
+    }
+    
+    .current-date {
+        font-size: 1rem;
+        margin-bottom: 8px;
+        line-height: 1.2;
+    }
+    
+    .days-until-birthday {
+        font-size: 0.8rem;
+        line-height: 1.3;
+    }
+    
+    /* Main Dashboard Mobile */
+    .main-dashboard {
+        width: 95%;
+        max-height: 85vh;
+        top: 45%;
+        left: 10px;
+        right: 10px;
+        transform: translateY(-50%);
+    }
+    
+    .age-number {
+        font-size: 3rem;
+    }
+    
+    .age-label {
+        font-size: 1.2rem;
+    }
+    
+    .countdown-timer {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 10px;
+        max-width: 300px;
+    }
+    
+    .time-unit {
+        padding: 15px;
+    }
+    
+    .time-number {
+        font-size: 1.5rem;
+    }
+    
+    .time-label {
+        font-size: 0.8rem;
+    }
+    
+    .thought-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 10px;
+    }
+    
+    .day-progress {
+        text-align: left;
+        width: 100%;
+    }
+    
+    .progress-bar {
+        width: 100%;
+    }
+    
+    .thought-actions {
+        flex-wrap: wrap;
+        gap: 8px;
+    }
+    
+    .thought-btn {
+        padding: 6px 12px;
+        font-size: 0.8rem;
+    }
+    
+    .stats-section {
+        grid-template-columns: 1fr;
+        gap: 10px;
+    }
+    
+    .stat-card {
+        padding: 15px;
+    }
+    
+    .stat-value {
+        font-size: 1.5rem;
+    }
+    
+    .stat-subtitle {
+        font-size: 0.6rem;
+    }
+    
+    .birth-card {
+        padding: 15px 20px;
+        gap: 10px;
+        margin: 10px;
+    }
+    
+    .birth-icon {
+        font-size: 2rem;
+    }
+    
+    .birth-label {
+        font-size: 1rem;
+    }
+    
+    .birth-subtitle {
+        font-size: 0.8rem;
+    }
+    
+    .stat-label {
+        font-size: 0.8rem;
+    }
+    
+    /* Daily Thoughts Mobile */
+    .daily-thought {
+        top: 40%;
+        left: 10px;
+        right: 10px;
+        transform: translateY(-50%);
+        padding: 20px;
+        max-width: none;
+        max-height: 60vh;
+        border-radius: 15px;
+    }
+    
+    .thought-content h3 {
+        font-size: 1.2rem;
+        margin-bottom: 15px;
+    }
+    
+    #thoughtText {
+        font-size: 1rem;
+        line-height: 1.5;
+        margin-bottom: 15px;
+    }
+    
+    .thought-counter {
+        padding: 8px;
+        border-radius: 8px;
+    }
+    
+    #dayCounter {
+        font-size: 0.8rem;
+    }
+    
     /* Typography adjustments */
-    .countdown {
+    
+    .boom {
         font-size: 6rem;
     }
     
-    .boom {
-        font-size: 8rem;
-    }
-    
     .typed-text {
-        font-size: 2.5rem;
+        font-size: 2rem;
+        line-height: 1.2;
     }
     
     .blessing {
-        font-size: 1.2rem;
-        padding: 15px;
+        font-size: 1rem;
+        padding: 12px;
         max-width: 95%;
+        top: 40%;
+        line-height: 1.4;
     }
     
     .final-message {
-        font-size: 2.5rem;
+        font-size: 2rem;
+        line-height: 1.2;
     }
     
     /* Cake adjustments */
@@ -1063,24 +1960,86 @@ body {
     .photo-gallery {
         position: fixed;
         bottom: 10px;
-        left: 50%;
-        transform: translateX(-50%);
+        left: 10px;
+        right: 10px;
         top: auto;
-        right: auto;
         display: flex;
-        flex-direction: row;
+        flex-direction: column;
         justify-content: center;
-        gap: 15px;
+        gap: 8px;
         z-index: 150;
+        padding: 8px;
+        max-width: none;
+        border-radius: 12px;
+    }
+    
+    .gallery-header {
+        margin-bottom: 10px;
+    }
+    
+    .gallery-header h3 {
+        font-size: 0.9rem;
+        margin-bottom: 5px;
+        line-height: 1.2;
+    }
+    
+    .gallery-toggle {
+        padding: 5px 10px;
+        font-size: 0.7rem;
+        border-radius: 15px;
+    }
+    
+    .photo-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 8px;
     }
     
     .photo-frame {
-        width: 60px;
-        height: 60px;
+        width: 55px;
+        height: 55px;
+        border-radius: 8px;
     }
     
-    .photo-content {
-        font-size: 1.5rem;
+    .photo-emoji {
+        font-size: 1rem;
+    }
+    
+    .photo-img {
+        border-radius: 6px;
+    }
+    
+    /* Photo modal mobile adjustments */
+    .photo-modal-content {
+        margin: 10px;
+        padding: 15px;
+        max-width: 95%;
+        max-height: 95%;
+    }
+    
+    .photo-modal-header h2 {
+        font-size: 1.3rem;
+    }
+    
+    .carousel-container {
+        max-width: 100%;
+        max-height: 250px;
+    }
+    
+    .carousel-btn {
+        width: 40px;
+        height: 40px;
+        font-size: 1.2rem;
+    }
+    
+    .photo-thumbnails {
+        grid-template-columns: repeat(auto-fit, minmax(40px, 1fr));
+        gap: 8px;
+        max-height: 100px;
+    }
+    
+    .thumbnail {
+        width: 40px;
+        height: 40px;
     }
     
     /* Modal adjustments */
@@ -1187,25 +2146,113 @@ body {
 
 @media (max-width: 480px) {
     /* Extra small mobile adjustments */
-    .countdown {
-        font-size: 4rem;
+    
+    /* Date Display Extra Small */
+    .date-display {
+        top: 5px;
+        left: 5px;
+        right: 5px;
+        padding: 8px;
+        border-radius: 8px;
+        font-size: 0.8rem;
     }
     
+    .current-date {
+        font-size: 0.9rem;
+        margin-bottom: 6px;
+    }
+    
+    .days-until-birthday {
+        font-size: 0.7rem;
+    }
+    
+    /* Daily Thoughts Extra Small */
+    .daily-thought {
+        top: 35%;
+        left: 5px;
+        right: 5px;
+        padding: 15px;
+        max-height: 65vh;
+        border-radius: 12px;
+    }
+    
+    .thought-content h3 {
+        font-size: 1.1rem;
+        margin-bottom: 12px;
+    }
+    
+    #thoughtText {
+        font-size: 0.9rem;
+        line-height: 1.4;
+        margin-bottom: 12px;
+    }
+    
+    .thought-counter {
+        padding: 6px;
+        border-radius: 6px;
+    }
+    
+    #dayCounter {
+        font-size: 0.7rem;
+    }
+    
+    /* Typography Extra Small */
+    
     .boom {
-        font-size: 6rem;
+        font-size: 5rem;
     }
     
     .typed-text {
-        font-size: 2rem;
+        font-size: 1.5rem;
+        line-height: 1.1;
     }
     
     .blessing {
-        font-size: 1rem;
-        padding: 12px;
+        font-size: 0.9rem;
+        padding: 10px;
+        top: 35%;
+        line-height: 1.3;
     }
     
     .final-message {
-        font-size: 2rem;
+        font-size: 1.5rem;
+        line-height: 1.1;
+    }
+    
+    /* Photo Gallery Extra Small */
+    .photo-gallery {
+        bottom: 5px;
+        left: 5px;
+        right: 5px;
+        padding: 6px;
+        border-radius: 10px;
+        gap: 6px;
+    }
+    
+    .gallery-header h3 {
+        font-size: 0.8rem;
+        margin-bottom: 4px;
+    }
+    
+    .gallery-toggle {
+        padding: 4px 8px;
+        font-size: 0.6rem;
+        border-radius: 12px;
+    }
+    
+    .photo-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 6px;
+    }
+    
+    .photo-frame {
+        width: 45px;
+        height: 45px;
+        border-radius: 6px;
+    }
+    
+    .photo-emoji {
+        font-size: 0.8rem;
     }
     
     .cake {
@@ -1328,6 +2375,14 @@ body {
         transform: scale(1) translateY(0);
     }
     
+    .gallery-toggle:hover {
+        transform: scale(1);
+    }
+    
+    .carousel-btn:hover {
+        transform: scale(1);
+    }
+    
     /* Increase touch targets */
     .cake-container {
         min-height: 120px;
@@ -1343,25 +2398,180 @@ body {
         min-height: 44px;
         min-width: 120px;
     }
+    
+    .gallery-toggle {
+        min-height: 36px;
+        min-width: 100px;
+    }
+    
+    .carousel-btn {
+        min-height: 44px;
+        min-width: 44px;
+    }
+    
+    /* Optimize animations for mobile */
+    .photo-frame {
+        animation: none;
+    }
+    
+    .photo-frame:nth-child(2),
+    .photo-frame:nth-child(3),
+    .photo-frame:nth-child(4),
+    .photo-frame:nth-child(5),
+    .photo-frame:nth-child(6) {
+        animation: none;
+    }
+    
+    /* Reduce particle effects for better performance */
+    .modern-particle {
+        animation-duration: 6s;
+    }
+    
+    .bg-particle {
+        animation-duration: 10s;
+    }
+}
+
+/* Very small screens (320px and below) */
+@media (max-width: 320px) {
+    .date-display {
+        top: 3px;
+        left: 3px;
+        right: 3px;
+        padding: 6px;
+        font-size: 0.7rem;
+    }
+    
+    .current-date {
+        font-size: 0.8rem;
+        margin-bottom: 4px;
+    }
+    
+    .days-until-birthday {
+        font-size: 0.6rem;
+    }
+    
+    .daily-thought {
+        top: 30%;
+        left: 3px;
+        right: 3px;
+        padding: 12px;
+        max-height: 70vh;
+        border-radius: 10px;
+    }
+    
+    .thought-content h3 {
+        font-size: 1rem;
+        margin-bottom: 10px;
+    }
+    
+    #thoughtText {
+        font-size: 0.8rem;
+        line-height: 1.3;
+        margin-bottom: 10px;
+    }
+    
+    
+    .boom {
+        font-size: 4rem;
+    }
+    
+    .typed-text {
+        font-size: 1.3rem;
+    }
+    
+    .blessing {
+        font-size: 0.8rem;
+        padding: 8px;
+        top: 30%;
+    }
+    
+    .final-message {
+        font-size: 1.3rem;
+    }
+    
+    .photo-gallery {
+        bottom: 3px;
+        left: 3px;
+        right: 3px;
+        padding: 5px;
+        gap: 4px;
+    }
+    
+    .gallery-header h3 {
+        font-size: 0.7rem;
+        margin-bottom: 3px;
+    }
+    
+    .gallery-toggle {
+        padding: 3px 6px;
+        font-size: 0.5rem;
+        border-radius: 10px;
+    }
+    
+    .photo-frame {
+        width: 35px;
+        height: 35px;
+        border-radius: 5px;
+    }
+    
+    .photo-emoji {
+        font-size: 0.7rem;
+    }
 }
 
 /* Landscape mobile adjustments */
 @media (max-width: 768px) and (orientation: landscape) {
-    .countdown {
-        font-size: 5rem;
+    .date-display {
+        top: 5px;
+        left: 5px;
+        right: 5px;
+        padding: 8px;
+        font-size: 0.8rem;
     }
     
+    .current-date {
+        font-size: 0.9rem;
+        margin-bottom: 5px;
+    }
+    
+    .days-until-birthday {
+        font-size: 0.7rem;
+    }
+    
+    .daily-thought {
+        top: 20%;
+        left: 5px;
+        right: 5px;
+        padding: 15px;
+        max-height: 80vh;
+        border-radius: 12px;
+    }
+    
+    .thought-content h3 {
+        font-size: 1.1rem;
+        margin-bottom: 10px;
+    }
+    
+    #thoughtText {
+        font-size: 0.9rem;
+        line-height: 1.4;
+        margin-bottom: 10px;
+    }
+    
+    
     .boom {
-        font-size: 7rem;
+        font-size: 6rem;
     }
     
     .typed-text {
-        font-size: 2rem;
+        font-size: 1.8rem;
     }
     
     .blessing {
-        font-size: 1rem;
-        top: 40%;
+        font-size: 0.9rem;
+        top: 25%;
+        padding: 8px;
     }
     
     .cake-container {
@@ -1369,16 +2579,165 @@ body {
     }
     
     .typing-container {
-        top: 20%;
+        top: 15%;
     }
     
     .photo-gallery {
         bottom: 5px;
-        gap: 10px;
+        left: 5px;
+        right: 5px;
+        gap: 8px;
+        padding: 6px;
     }
     
     .photo-frame {
-        width: 50px;
-        height: 50px;
+        width: 45px;
+        height: 45px;
     }
+}
+
+/* Daily Background Themes and Animations */
+body {
+    transition: background 1s ease-in-out;
+}
+
+/* Sunset Bliss Animation */
+.theme-sunsetGlow {
+    animation: sunsetGlow 8s ease-in-out infinite alternate;
+}
+
+@keyframes sunsetGlow {
+    0% { filter: hue-rotate(0deg) brightness(1); }
+    50% { filter: hue-rotate(10deg) brightness(1.1); }
+    100% { filter: hue-rotate(-10deg) brightness(0.9); }
+}
+
+/* Ocean Waves Animation */
+.theme-waveMotion {
+    animation: waveMotion 6s ease-in-out infinite;
+}
+
+@keyframes waveMotion {
+    0%, 100% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+}
+
+/* Forest Green Animation */
+.theme-forestBreeze {
+    animation: forestBreeze 10s ease-in-out infinite alternate;
+}
+
+@keyframes forestBreeze {
+    0% { filter: hue-rotate(0deg) saturate(1); }
+    100% { filter: hue-rotate(5deg) saturate(1.2); }
+}
+
+/* Sunset Orange Animation */
+.theme-orangeGlow {
+    animation: orangeGlow 7s ease-in-out infinite alternate;
+}
+
+@keyframes orangeGlow {
+    0% { filter: brightness(1) hue-rotate(0deg); }
+    100% { filter: brightness(1.2) hue-rotate(15deg); }
+}
+
+/* Purple Dreams Animation */
+.theme-purplePulse {
+    animation: purplePulse 5s ease-in-out infinite;
+}
+
+@keyframes purplePulse {
+    0%, 100% { filter: brightness(1) contrast(1); }
+    50% { filter: brightness(1.1) contrast(1.1); }
+}
+
+/* Rose Garden Animation */
+.theme-roseBloom {
+    animation: roseBloom 9s ease-in-out infinite alternate;
+}
+
+@keyframes roseBloom {
+    0% { filter: hue-rotate(0deg) saturate(1); }
+    100% { filter: hue-rotate(10deg) saturate(1.3); }
+}
+
+/* Golden Hour Animation */
+.theme-goldenShimmer {
+    animation: goldenShimmer 6s ease-in-out infinite;
+}
+
+@keyframes goldenShimmer {
+    0%, 100% { filter: brightness(1) hue-rotate(0deg); }
+    50% { filter: brightness(1.3) hue-rotate(20deg); }
+}
+
+/* Mint Fresh Animation */
+.theme-mintFlow {
+    animation: mintFlow 8s ease-in-out infinite alternate;
+}
+
+@keyframes mintFlow {
+    0% { filter: hue-rotate(0deg) brightness(1); }
+    100% { filter: hue-rotate(-10deg) brightness(1.1); }
+}
+
+/* Lavender Fields Animation */
+.theme-lavenderSway {
+    animation: lavenderSway 7s ease-in-out infinite alternate;
+}
+
+@keyframes lavenderSway {
+    0% { filter: hue-rotate(0deg) saturate(1); }
+    100% { filter: hue-rotate(15deg) saturate(1.2); }
+}
+
+/* Coral Reef Animation */
+.theme-coralDance {
+    animation: coralDance 6s ease-in-out infinite;
+}
+
+@keyframes coralDance {
+    0%, 100% { filter: brightness(1) hue-rotate(0deg); }
+    50% { filter: brightness(1.2) hue-rotate(25deg); }
+}
+
+/* Midnight Blue Animation */
+.theme-midnightTwinkle {
+    animation: midnightTwinkle 10s ease-in-out infinite alternate;
+}
+
+@keyframes midnightTwinkle {
+    0% { filter: brightness(0.8) contrast(1); }
+    100% { filter: brightness(1.1) contrast(1.2); }
+}
+
+/* Peach Paradise Animation */
+.theme-peachGlow {
+    animation: peachGlow 8s ease-in-out infinite alternate;
+}
+
+@keyframes peachGlow {
+    0% { filter: hue-rotate(0deg) brightness(1); }
+    100% { filter: hue-rotate(20deg) brightness(1.2); }
+}
+
+/* Emerald Forest Animation */
+.theme-emeraldShine {
+    animation: emeraldShine 7s ease-in-out infinite alternate;
+}
+
+@keyframes emeraldShine {
+    0% { filter: hue-rotate(0deg) saturate(1); }
+    100% { filter: hue-rotate(-15deg) saturate(1.4); }
+}
+
+/* Cosmic Purple Animation */
+.theme-cosmicFlow {
+    animation: cosmicFlow 9s ease-in-out infinite;
+}
+
+@keyframes cosmicFlow {
+    0%, 100% { filter: brightness(1) hue-rotate(0deg); }
+    50% { filter: brightness(1.1) hue-rotate(30deg); }
 }

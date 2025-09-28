@@ -33,16 +33,181 @@
     <!-- Modern Particle System -->
     <div class="particle-system" id="particleSystem"></div>
     
-    <!-- Photo Gallery -->
+    <!-- Date Display -->
+    <div class="date-display" id="dateDisplay">
+        <div class="current-date" id="currentDate"></div>
+        <div class="days-until-birthday" id="daysUntilBirthday"></div>
+    </div>
+
+    <!-- Main Dashboard (Non-Birthday Mode) -->
+    <div class="main-dashboard" id="mainDashboard">
+        <!-- Age and Info Section -->
+        <div class="age-section">
+            <div class="age-card">
+                <div class="age-number" id="ageNumber">23</div>
+                <div class="age-label">वर्षे</div>
+                <div class="birth-year" id="birthYear">जन्म: 2001</div>
+            </div>
+        </div>
+
+        <!-- Countdown Section -->
+        <div class="countdown-section">
+            <h3>🎂 आनंदासाठी थोडे दिवस शिल्लक 🎂</h3>
+            <div class="countdown-timer" id="countdownTimer">
+                <div class="time-unit">
+                    <span class="time-number" id="daysCount">364</span>
+                    <span class="time-label">दिवस</span>
+                </div>
+                <div class="time-unit">
+                    <span class="time-number" id="hoursCount">23</span>
+                    <span class="time-label">तास</span>
+                </div>
+                <div class="time-unit">
+                    <span class="time-number" id="minutesCount">59</span>
+                    <span class="time-label">मिनिटे</span>
+                </div>
+                <div class="time-unit">
+                    <span class="time-number" id="secondsCount">59</span>
+                    <span class="time-label">सेकंद</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Daily Thought Display -->
+        <div class="daily-thought-card">
+            <div class="thought-header">
+                <h3>📿 आजचा विचार 📿</h3>
+                <div class="day-progress">
+                    <span id="dayCounter">दिवस 270 / 365</span>
+                    <div class="progress-bar">
+                        <div class="progress-fill" id="progressFill"></div>
+                    </div>
+                </div>
+            </div>
+            <div class="thought-content">
+                <p id="thoughtText"></p>
+            </div>
+            <div class="thought-actions">
+                <button class="thought-btn" onclick="shareThought()">📤 शेअर करा</button>
+                <button class="thought-btn" onclick="saveThought()">💾 सेव्ह करा</button>
+            </div>
+        </div>
+
+        <!-- Life Journey Section -->
+        <div class="stats-section">
+            <div class="stat-card">
+                <div class="stat-icon">📅</div>
+                <div class="stat-value" id="daysAlive">1</div>
+                <div class="stat-label">दिवस</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon">📆</div>
+                <div class="stat-value" id="monthsAlive">0</div>
+                <div class="stat-label">महिने</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon">🎂</div>
+                <div class="stat-value" id="yearsAlive">24</div>
+                <div class="stat-label">वर्षे</div>
+            </div>
+        </div>
+        
+        <!-- Birth Info Section -->
+        <div class="birth-info-section">
+            <div class="birth-card">
+                <div class="birth-icon">🌟</div>
+                <div class="birth-text">
+                    <div class="birth-label">जन्म: 2001</div>
+                    <div class="birth-subtitle">सप्टेंबर 27</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Daily Thought Display (Birthday Mode) -->
+    <div class="daily-thought" id="dailyThought">
+        <div class="thought-content">
+            <h3>📿 आजचा विचार 📿</h3>
+            <p id="thoughtText"></p>
+            <div class="thought-counter">
+                <span id="dayCounter">दिवस 1 / 365</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Advanced Photo Gallery -->
     <div class="photo-gallery">
-        <div class="photo-frame" onclick="showMemory(0)">
-            <div class="photo-content">🎂</div>
+        <div class="gallery-header">
+            <h3>🎂 Birthday Memories 🎂</h3>
+            <button class="gallery-toggle" onclick="toggleGallery()">📷 View All Photos</button>
         </div>
-        <div class="photo-frame" onclick="showMemory(1)">
-            <div class="photo-content">🎉</div>
+        <div class="photo-grid" id="photoGrid">
+            <div class="photo-frame" onclick="showMemory(0)">
+                <img src="image/4.jpg" alt="Birthday Memory 1" class="photo-img">
+                <div class="photo-overlay">
+                    <span class="photo-emoji">🎁</span>
+                </div>
+            </div>
+            <div class="photo-frame" onclick="showMemory(1)">
+                <img src="image/5.jpg" alt="Birthday Memory 2" class="photo-img">
+                <div class="photo-overlay">
+                    <span class="photo-emoji">🌟</span>
+                </div>
+            </div>
+            <div class="photo-frame" onclick="showMemory(2)">
+                <img src="image/6.jpg" alt="Birthday Memory 3" class="photo-img">
+                <div class="photo-overlay">
+                    <span class="photo-emoji">💖</span>
+                </div>
+            </div>
+            <div class="photo-frame" onclick="showMemory(3)">
+                <img src="image/7.jpg" alt="Birthday Memory 4" class="photo-img">
+                <div class="photo-overlay">
+                    <span class="photo-emoji">🎉</span>
+                </div>
+            </div>
+            <div class="photo-frame" onclick="showMemory(4)">
+                <img src="image/8.jpg" alt="Birthday Memory 5" class="photo-img">
+                <div class="photo-overlay">
+                    <span class="photo-emoji">🎈</span>
+                </div>
+            </div>
+            <div class="photo-frame" onclick="showMemory(5)">
+                <img src="image/9.jpg" alt="Birthday Memory 6" class="photo-img">
+                <div class="photo-overlay">
+                    <span class="photo-emoji">🎂</span>
+                </div>
+            </div>
         </div>
-        <div class="photo-frame" onclick="showMemory(2)">
-            <div class="photo-content">✨</div>
+    </div>
+
+    <!-- Full Photo Gallery Modal -->
+    <div class="photo-modal" id="photoModal">
+        <div class="photo-modal-content">
+            <div class="photo-modal-header">
+                <h2>🎂 Birthday Celebration Photos 🎂</h2>
+                <button class="close-gallery" onclick="closePhotoGallery()">&times;</button>
+            </div>
+            <div class="photo-content-area">
+                <div class="photo-main-content">
+                    <div class="photo-carousel" id="photoCarousel">
+                        <button class="carousel-btn prev-btn" onclick="previousPhoto()">❮</button>
+                        <div class="carousel-container">
+                            <img id="carouselImage" src="" alt="Birthday Photo">
+                            <div class="photo-info">
+                                <span id="photoCounter">1 / 16</span>
+                                <span id="photoTitle">Birthday Celebration</span>
+                            </div>
+                        </div>
+                        <button class="carousel-btn next-btn" onclick="nextPhoto()">❯</button>
+                    </div>
+                </div>
+                <div class="photo-sidebar">
+                    <div class="photo-thumbnails" id="photoThumbnails">
+                        <!-- Thumbnails will be generated by JavaScript -->
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
     
@@ -56,8 +221,9 @@
         <button onclick="hideMemory()" style="margin-top: 10px; padding: 5px 15px; background: #ff6b6b; color: white; border: none; border-radius: 15px; cursor: pointer;">Close</button>
     </div>
 
-    <!-- Countdown -->
-    <div class="countdown" id="countdown">3</div>
+
+    <!-- Birthday Countdown (only shown on birthday) -->
+    <div class="birthday-countdown" id="birthdayCountdown">3</div>
 
     <!-- Matrix Background -->
     <div class="matrix" id="matrix"></div>
